@@ -9,8 +9,7 @@ int main() {
   void * content = wait_content(socket);
   send_md5(socket, content);
   wait_confirmation(socket);
-
-  return 0;
+  exit_gracefully(0);
 }
 
 void configure_logger() {
@@ -40,7 +39,8 @@ int connect_to_server(char * ip, char * port) {
 
   /*
     3.1 Recuerden chequear por si no se pudo contectar.
-        Si hubo un error, lo loggeamos y salimos ;).
+        Si hubo un error, lo loggeamos y podemos terminar el programa con la funcioncita
+        exit_gracefully pasandole 1 como parametro para indicar error ;).
         Pss, revisen los niveles de log de las commons.
   */
 
@@ -49,32 +49,54 @@ int connect_to_server(char * ip, char * port) {
 
 void  wait_hello(int socket) {
   char * hola = "SYSTEM UTNSO 0.1";
-  char * buf = GC_MALLOC(strlen(hola));
-  printf("Waiting Hello\n");
-  if (recv(socket, buf, strlen(hola), MSG_WAITALL) <= 0) {
-    perror("Could not receive hello");
-    exit(1);
-  }
 
-  if (strcmp(buf, hola) != 0) {
-    printf("Invalid hello message");
-    exit(1);
-  }
+  /*
+    5.  Ya conectados al servidor, vamos a hacer un handshake!
+        Para esto, vamos a, primero recibir un mensaje del
+        servidor y luego mandar nosotros un mensaje.
+        Deberìamos recibir lo mismo que está contenido en la
+        variable "hola". Entonces, vamos por partes:
+        5.1.  Reservemos memoria para un buffer para recibir el mensaje.
+  */
+  char * buffer = malloc(/*5.1*/);
+  /*
+        5.2.  Recibamos el mensaje en el buffer.
+        Recuerden el prototipo de recv:
+        conexión - donde guardar - cant de bytes - flags(si no se pasa ninguno puede ir NULL)
+        Nota: Palabra clave MSG_WAITALL.
+  */
+  int result_recv = recv(/*5.2*/);
+  /*
+        5.3.  Chequiemos errores al recibir! (y logiemos, por supuesto)
+        5.4.  Comparemos lo recibido con "hola".
+              Pueden usar las funciones de las commons para comparar!
+        No se olviden de loggear y devolver la memoria que pedimos!
+        (si, también si falló algo, tenemos que devolverla, atenti.)
+  */
 
-  printf("Received hello message: '%s'\n", buf);
 }
 
 void send_hello(int socket) {
-  printf("Sending student info\n");
-  Alumno alumno = { .id_mensaje = 99, .legajo = 1466562, .nombre = "Carlos", .apellido = "Perez" };
-  
-  // Try invalid ascii chars
-  // alumno.nombre[2] = -4;
+  log_info(logger, "Enviando info de Estudiante");
+  /*
+    6.    Ahora nos toca mandar el hola, por lo que mandemos un alumno!
+          Alumno es esa estructura que definimos en el .h, vamos a crearla
+          usando el id del protocolo para mandar un alumno: el id 99.
+          Tambien, completemos los demas datos con tus datos propios.
+  */
+  Alumno alumno = ;
+  /*
+    6.1.  Como algo extra, podes probar enviando caracteres invalidos en el nombre
+          o un id de otra operacion a ver que responde el servidor y como se
+          comporta nuestro cliente.
+  */  
 
-  if (send(socket, &alumno, sizeof(Alumno), 0) <= 0) {
-    perror("Could not send hello");
-    exit(1);
-  }
+  /*
+    7.    Finalmente, enviemos la estructura por el socket!
+          Recuerden que nuestra estructura esta definida como __attribute__((packed))
+          por lo que no tiene padding y la podemos mandar directamente sin necesidad
+          de un buffer y usando el tamaño del tipo Alumno!
+  */
 }
 
 void * wait_content(int socket) {
@@ -139,4 +161,10 @@ void wait_confirmation(int socket) {
   }
 
   printf("MD5 Matched!\n");
+}
+
+void exit_gracefully(int return_nr) {
+  /*
+    Así como lo creamos, no olvidemos de destruirlo al final
+  */
 }

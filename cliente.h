@@ -55,5 +55,5 @@ void send_hello(int socket);
 void * wait_content(int socket);
 void send_md5(int socket, void * content);
 void wait_confirmation(int socket);
-
+void exit_gracefully(int return_nr);
 #endif /* CLIENTE_H_ */
