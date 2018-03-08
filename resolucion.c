@@ -187,6 +187,58 @@ void * wait_content(int socket) {
   return buf;
 }
 
+void send_md5(int socket, void * content) {
+  /*
+    11.   Ahora calculemos el MD5 del contenido, para eso vamos
+          a armar el digest:
+  */
+
+  void * digest = malloc(MD5_DIGEST_LENGTH);
+  MD5_CTX context;
+  MD5_Init(&context);
+  MD5_Update(&context, content, strlen(content) + 1);
+  MD5_Final(digest, &context);
+
+  free(content);
+
+  /*
+    12.   Luego, nos toca enviar a nosotros un contenido variable.
+          A diferencia de recibirlo, para mandarlo es mejor enviarlo todo de una,
+          siguiendo la logida de 1 send - N recv.
+          Asi que:
+  */
+
+  //      12.1. Creamos un ContentHeader para guardar un mensaje de id 33 y el tamaño del md5
+
+  Md5Header header = { .id = 33, .len = MD5_DIGEST_LENGTH };
+
+  /*
+          12.2. Creamos un buffer del tamaño del mensaje completo y copiamos el header y la info de "digest" allí.
+          Recuerden revisar la función memcpy(ptr_destino, ptr_origen, tamaño)!
+  */
+
+  int message_size = sizeof(Md5Header) + MD5_DIGEST_LENGTH;
+  void * buf = malloc(message_size);
+
+  memcpy(buf, &header, sizeof(Md5Header));
+  memcpy(buf + sizeof(Md5Header), digest, MD5_DIGEST_LENGTH);
+
+
+  /*
+    13.   Con todo listo, solo nos falta enviar el paquete que armamos y liberar la memoria que usamos.
+          Si, TODA la que usamos, eso incluye a la del contenido del mensaje que recibimos en la función
+          anterior.
+  */
+
+  log_info(logger, "Enviando MD5");
+  if (send(socket, buf, message_size, 0) <= 0) {
+    log_error(logger, "No se pudo enviar el md5");
+    close(socket);
+    free(buf);
+    exit_gracefully(1);
+  }
+}
+
 void exit_gracefully(int return_nr) {
   /*
     Así como lo creamos, no olvidemos de destruirlo al final

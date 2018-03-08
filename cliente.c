@@ -109,7 +109,7 @@ void * wait_content(int socket) {
 
   log_info(logger, "Esperando el encabezado del contenido(%ld bytes)", sizeof(ContentHeader));
   // 8.1. Reservamos el suficiente espacio para guardar un ContentHeader
-  ContentHeader * header = /* 8.1. */;
+  ContentHeader * header = { /* 8.1. */ };
 
   // 8.2. Recibamos el header en la estructura y chequiemos si el id es el correcto.
   //      No se olviden de validar los errores!
@@ -130,27 +130,38 @@ void * wait_content(int socket) {
 }
 
 void send_md5(int socket, void * content) {
-  void * digest = GC_MALLOC(MD5_DIGEST_LENGTH);
+  /*
+    11.   Ahora calculemos el MD5 del contenido, para eso vamos
+          a armar el digest:
+  */
+
+  void * digest = malloc(MD5_DIGEST_LENGTH);
   MD5_CTX context;
   MD5_Init(&context);
   MD5_Update(&context, content, strlen(content) + 1);
   MD5_Final(digest, &context);
 
-  Md5Header header = { .id = 33, .len = MD5_DIGEST_LENGTH };
-  
-  // Try sending invalid header length
-  // Md5Header header = { .id = 33, .len = 500 };
-  
-  int message_size = sizeof(Md5Header) + MD5_DIGEST_LENGTH;
-  void * buf = GC_MALLOC(message_size);
+  /*
+    12.   Luego, nos toca enviar a nosotros un contenido variable.
+          A diferencia de recibirlo, para mandarlo es mejor enviarlo todo de una,
+          siguiendo la logida de 1 send - N recv.
+          Asi que:
+  */
 
-  memcpy(buf, &header, sizeof(Md5Header));
-  memcpy(buf + sizeof(Md5Header), digest, MD5_DIGEST_LENGTH);
+  //      12.1. Creamos un Md5Header para guardar un mensaje de id 33 y el tamaño del md5
 
-  printf("Sending MD5\n");
-  if (send(socket, buf, message_size, 0) <= 0) {
-    perror("Could not send md5");
-  }
+  Md5Header header = { /* 12.1. */ };
+
+  /*
+          12.2. Creamos un buffer del tamaño del mensaje completo y copiamos el header y la info de "digest" allí.
+          Recuerden revisar la función memcpy(ptr_destino, ptr_origen, tamaño)!
+  */
+
+  /*
+    13.   Con todo listo, solo nos falta enviar el paquete que armamos y liberar la memoria que usamos.
+          Si, TODA la que usamos, eso incluye a la del contenido del mensaje que recibimos en la función
+          anterior.
+  */
 }
 
 void wait_confirmation(int socket) {
