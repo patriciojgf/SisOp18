@@ -84,7 +84,7 @@ void send_hello(int socket) {
           usando el id del protocolo para mandar un alumno: el id 99.
           Tambien, completemos los demas datos con tus datos propios.
   */
-  Alumno alumno = ;
+  Alumno alumno = { /* ??? */ };
   /*
     6.1.  Como algo extra, podes probar enviando caracteres invalidos en el nombre
           o un id de otra operacion a ver que responde el servidor y como se
@@ -100,27 +100,33 @@ void send_hello(int socket) {
 }
 
 void * wait_content(int socket) {
-  printf("Waiting content header (%ld bytes)\n", sizeof(ContentHeader));
-  ContentHeader * header = GC_MALLOC(sizeof(ContentHeader));
+  /*
+    8.    Ahora tenemos que recibir un contenido de tamaño variable
+          Para eso, primero tenemos que confirmar que el id corresponde al de una
+          respuesta de contenido variable (18) y despues junto con el id de operacion
+          vamos a haber recibido el tamaño del contenido que sigue. Por lo que:
+  */
 
-  if (recv(socket, header, sizeof(ContentHeader), 0) <= 0) {
-    perror("Could not receive content header");
-    exit(1);
-  }
+  log_info(logger, "Esperando el encabezado del contenido(%ld bytes)", sizeof(ContentHeader));
+  // 8.1. Reservamos el suficiente espacio para guardar un ContentHeader
+  ContentHeader * header = /* 8.1. */;
 
-  if (header->id != 18) {
-    printf("Invalid message id %d, but was expecting 18", header->id);
-  }
+  // 8.2. Recibamos el header en la estructura y chequiemos si el id es el correcto.
+  //      No se olviden de validar los errores!
 
-  printf("Waiting content (%d bytes)\n", header->len);
-  void * buf = GC_MALLOC(header->len);
-  if (recv(socket, buf, header->len, MSG_WAITALL) <= 0) {
-    perror("Error receiving content");
-    exit(1);
-  }
+  log_info(logger, "Esperando el contenido (%d bytes)", header->len);
 
-  printf("Received content '%s'\n", (char*) buf);
-  return buf;
+  /*
+      9.    Ahora, recibamos el contenido variable. Ya tenemos el tamaño,
+            por lo que reecibirlo es lo mismo que veniamos haciendo:
+      9.1.  Reservamos memoria
+      9.2.  Recibimos el contenido en un buffer (si hubo error, fallamos, liberamos y salimos
+  */
+
+  /*
+      10.   Finalmente, no te olvides de liberar la memoria que pedimos
+            para el header y retornar el contenido recibido.
+  */
 }
 
 void send_md5(int socket, void * content) {

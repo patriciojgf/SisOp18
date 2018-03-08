@@ -78,13 +78,14 @@ void  wait_hello(int socket) {
         5.3.  Chequiemos errores al recibir! (y logiemos, por supuesto)
         5.4.  Comparemos lo recibido con "hola".
               Pueden usar las funciones de las commons para comparar!
-        No se olviden de loggear y devolver la memoria que pedimos!
+        No se olviden de loggear, cerrar el socket y devolver la memoria que pedimos!
         (si, también si falló algo, tenemos que devolverla, atenti.)
   */
 
   void _exit_with_error(char* error_msg) {
     log_error(logger, error_msg);
     free(buffer);
+    close(socket);
     exit_gracefully(1);
   }
 
@@ -97,6 +98,7 @@ void  wait_hello(int socket) {
   }
 
   log_info(logger, "Mensaje de hola recibido: '%s'", buffer);
+  free(buffer);
 }
 
 void send_hello(int socket) {
@@ -125,8 +127,64 @@ void send_hello(int socket) {
   */
   if (send(socket, &alumno, sizeof(Alumno), 0) <= 0) {
     log_error(logger, "Could not send hello");
+    close(socket);
     exit_gracefully(1);
   }
+}
+
+void * wait_content(int socket) {
+  /*
+    8.    Ahora tenemos que recibir un contenido de tamaño variable
+          Para eso, primero tenemos que confirmar que el id corresponde al de una
+          respuesta de contenido variable (18) y despues junto con el id de operacion
+          vamos a haber recibido el tamaño del contenido que sigue. Por lo que:
+  */
+
+  log_info(logger, "Esperando el encabezado del contenido(%ld bytes)", sizeof(ContentHeader));
+  // 8.1. Reservamos el suficiente espacio para guardar un ContentHeader
+  ContentHeader * header = (ContentHeader*) malloc(sizeof(ContentHeader));
+
+  // 8.2. Recibamos el header en la estructura y chequiemos si el id es el correcto.
+  //      No se olviden de validar los errores!
+
+  void _exit_with_error(char* error_msg) {
+    log_error(logger, error_msg);
+    close(socket);
+    free(header);
+    exit_gracefully(1);
+  }
+
+  if (recv(socket, header, sizeof(ContentHeader), 0) <= 0) {
+    _exit_with_error("No se pudo recibir el encabezado del contenido");
+  }
+
+  if (header->id != 18) {
+    _exit_with_error("Id incorrecto, deberia ser 18");
+  }
+
+  log_info(logger, "Esperando el contenido (%d bytes)", header->len);
+
+  /*
+      9.    Ahora, recibamos el contenido variable. Ya tenemos el tamaño,
+            por lo que reecibirlo es lo mismo que veniamos haciendo:
+      9.1.  Reservamos memoria
+      9.2.  Recibimos el contenido en un buffer (si hubo error, fallamos, liberamos y salimos
+  */
+
+  void * buf = malloc(header->len);
+  if (recv(socket, buf, header->len, MSG_WAITALL) <= 0) {
+    free(buf);
+    _exit_with_error("Error recibiendo el contenido");
+  }
+
+  /*
+      10.   Finalmente, no te olvides de liberar la memoria que pedimos
+            para el header y retornar el contenido recibido.
+  */
+
+  log_info(logger, "Contenido recibido '%s'", (char*) buf);
+  free(header);
+  return buf;
 }
 
 void exit_gracefully(int return_nr) {
