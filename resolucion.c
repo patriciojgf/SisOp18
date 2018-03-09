@@ -239,9 +239,36 @@ void send_md5(int socket, void * content) {
   }
 }
 
+void wait_confirmation(int socket) {
+  int result = 1; // Dejemos creado un resultado por defecto
+  /*
+    14.   Ahora nos toca recibir la confirmacion del servidor.
+          Si el resultado obvenido es distinto de 0, entonces hubo un error
+  */
+
+  void _exit_with_error(char* error_msg) {
+    log_error(logger, error_msg);
+    close(socket);
+    exit_gracefully(1);
+  }
+
+  log_info(logger, "Esperando confirmacion");
+  if (recv(socket, &result, sizeof(int), 0) <= 0) {
+    _exit_with_error("No se pudo recibir confirmacion");
+  }
+
+  if (result != 0) {
+    _exit_with_error("El md5 no coincidio");
+  }
+
+  log_info(logger, "Los MD5 concidieron!");
+}
+
 void exit_gracefully(int return_nr) {
   /*
-    Así como lo creamos, no olvidemos de destruirlo al final
+    15.   Siempre llamamos a esta funcion para cerrar el programa.
+          Asi solo necesitamos destruir el logger y usar la llamada al
+          sistema exit() para terminar la ejecucion
   */
   log_destroy(logger);
   exit(return_nr);
