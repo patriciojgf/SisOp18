@@ -12,7 +12,7 @@
     del mismo archivo de header 2 veces.
 */
 
-// Aca incluimos las bibliotecas que vamos a usar (Revisar)
+// Aca incluimos las bibliotecas que vamos a usar
 #include <stdio.h>
 #include <openssl/md5.h>
 #include <string.h>
@@ -49,8 +49,9 @@ typedef struct {
 } __attribute__((packed)) Md5Header;
 
 // Finalmente, los prototipos de las funciones que vamos a implementar
-int connect_to_server(char * ip, char * port);
-void  wait_hello(int socket);
+void configure_logger();
+int  connect_to_server(char * ip, char * port);
+void wait_hello(int socket);
 void send_hello(int socket);
 void * wait_content(int socket);
 void send_md5(int socket, void * content);
