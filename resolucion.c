@@ -47,6 +47,7 @@ int connect_to_server(char * ip, char * port) {
   */
   if (res < 0) {
     log_error(logger, "No me pude conectar al servidor");
+    close(server_socket);
     exit_gracefully(1);
   }
   // 4 Logeamos que pudimos conectar y retornamos el socket
@@ -65,7 +66,7 @@ void  wait_hello(int socket) {
         variable "hola". Entonces, vamos por partes:
         5.1.  Reservemos memoria para un buffer para recibir el mensaje.
   */
-  char * buffer = (char*) malloc(strlen(hola));
+  char * buffer = (char*) calloc(sizeof(char), strlen(hola) + 1);
   /*
         5.2.  Recibamos el mensaje en el buffer.
         Recuerden el prototipo de recv:
@@ -171,7 +172,7 @@ void * wait_content(int socket) {
       9.2.  Recibimos el contenido en un buffer (si hubo error, fallamos, liberamos y salimos
   */
 
-  void * buf = malloc(header->len);
+  void * buf = calloc(sizeof(char), header->len + 1);
   if (recv(socket, buf, header->len, MSG_WAITALL) <= 0) {
     free(buf);
     _exit_with_error("Error recibiendo el contenido");
@@ -223,7 +224,7 @@ void send_md5(int socket, void * content) {
   memcpy(buf, &header, sizeof(Md5Header));
   memcpy(buf + sizeof(Md5Header), digest, MD5_DIGEST_LENGTH);
 
-
+  free(digest);
   /*
     13.   Con todo listo, solo nos falta enviar el paquete que armamos y liberar la memoria que usamos.
           Si, TODA la que usamos, eso incluye a la del contenido del mensaje que recibimos en la función
@@ -231,10 +232,12 @@ void send_md5(int socket, void * content) {
   */
 
   log_info(logger, "Enviando MD5");
-  if (send(socket, buf, message_size, 0) <= 0) {
+  int result_send =  send(socket, buf, message_size, 0);
+  free(buf);
+
+  if (result_send <= 0) {
     log_error(logger, "No se pudo enviar el md5");
     close(socket);
-    free(buf);
     exit_gracefully(1);
   }
 }
@@ -262,6 +265,7 @@ void wait_confirmation(int socket) {
   }
 
   log_info(logger, "Los MD5 concidieron!");
+  close(socket);
 }
 
 void exit_gracefully(int return_nr) {
