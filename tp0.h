@@ -15,7 +15,7 @@
 // Aca incluimos las bibliotecas que vamos a usar
 #include <openssl/md5.h> // Para calcular el MD5
 #include <string.h>
-#include <stdlib.h> // PAra malloc
+#include <stdlib.h> // Para malloc
 #include <sys/socket.h> // Para crear sockets, enviar, recibir, etc
 #include <netdb.h> // Para getaddrinfo
 #include <unistd.h> // Para close
