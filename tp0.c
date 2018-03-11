@@ -132,14 +132,14 @@ Alumno read_hello() {
 void send_hello(int socket) {
   log_info(logger, "Enviando info de Estudiante");
   /*
-    10.   Ahora SI nos toca mandar el hola con los datos del alumno.
+    11.   Ahora SI nos toca mandar el hola con los datos del alumno.
           Pero nos falta algo en nuestra estructura, el id_mensaje del protocolo.
           Segun definimos, el tipo de id para un mensaje de tamaño fijo con
           la informacion del alumno es el id 99
   */
 
   /*
-    10.1. Como algo extra, podes probar enviando caracteres invalidos en el nombre
+    11.1. Como algo extra, podes probar enviando caracteres invalidos en el nombre
           o un id de otra operacion a ver que responde el servidor y como se
           comporta nuestro cliente.
   */  
