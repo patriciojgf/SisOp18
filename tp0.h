@@ -13,15 +13,15 @@
 */
 
 // Aca incluimos las bibliotecas que vamos a usar
-#include <stdio.h>
-#include <openssl/md5.h>
+#include <openssl/md5.h> // Para calcular el MD5
 #include <string.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <unistd.h>
+#include <stdlib.h> // PAra malloc
+#include <sys/socket.h> // Para crear sockets, enviar, recibir, etc
+#include <netdb.h> // Para getaddrinfo
+#include <unistd.h> // Para close
+#include <readline/readline.h> // Para usar readline
 #include <commons/log.h>
+#include <commons/collections/list.h>
 
 // Definimos algunas constantes para nuestro código
 #define IP "127.0.0.1"
@@ -43,16 +43,12 @@ typedef struct {
   int len;
 } __attribute__((packed)) ContentHeader;
 
-typedef struct {
-  int id;
-  int len;
-} __attribute__((packed)) Md5Header;
-
 // Finalmente, los prototipos de las funciones que vamos a implementar
 void configure_logger();
 int  connect_to_server(char * ip, char * port);
 void wait_hello(int socket);
-void send_hello(int socket);
+Alumno read_hello();
+void send_hello(int socket, Alumno alumno);
 void * wait_content(int socket);
 void send_md5(int socket, void * content);
 void wait_confirmation(int socket);
