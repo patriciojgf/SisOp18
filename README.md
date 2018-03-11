@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sistemas Operativos - TP0
 
 ## ¿De qué trata?
@@ -15,3 +16,6 @@ Es recomendable tener mínimos conocimientos de C y socket para poder sacar más
 ## Desarrollo
 
 Para realizar este TP de una forma más óptima, es recomendable hacerlo junto con [su enunciado](https://docs.google.com/document/d/1azSR9T_LosaMeLk_WT5HgN71-2QVum-rtEgXOTQLZt8), complementando las anotaciones del código.
+=======
+# Sistemas Operativos TP "0"
+>>>>>>> origin/master
