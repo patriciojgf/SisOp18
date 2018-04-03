@@ -13,7 +13,7 @@
 */
 
 // Aca incluimos las bibliotecas que vamos a usar
-#include <stdio.h> // Por dependencia de readline :)
+#include <stdio.h> // Por dependencia de readline en algunas distros de linux :)
 #include <openssl/md5.h> // Para calcular el MD5
 #include <string.h>
 #include <stdlib.h> // Para malloc
