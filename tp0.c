@@ -33,10 +33,10 @@ int connect_to_server(char * ip, char * port) {
   getaddrinfo(ip, port, &hints, &server_info);  // Carga en server_info los datos de la conexion
 
   // 2. Creemos el socket con el nombre "server_socket" usando la "server_info" que creamos anteriormente
-  int server_socket = /* ?? */;
+  int server_socket = socket(/* familia, socktype, protocolo */);
 
   // 3. Conectemosnos al server a traves del socket! Para eso vamos a usar connect()
-  int retorno = connect(/* ?? */);
+  int retorno = connect(/* socket, address, longitud de la address */);
 
   freeaddrinfo(server_info);  // No lo necesitamos mas
 
