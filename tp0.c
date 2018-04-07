@@ -129,7 +129,7 @@ Alumno read_hello() {
   return alumno;
 }
 
-void send_hello(int socket) {
+void send_hello(int socket, Alumno alumno) {
   log_info(logger, "Enviando info de Estudiante");
   /*
     11.   Ahora SI nos toca mandar el hola con los datos del alumno.
