@@ -155,9 +155,11 @@ void send_hello(int socket, Alumno alumno) {
   */
   int resultado = (send(/* ?? */, &alumno, /* ??? */, 0);
 
-  /*
-    12.1. Recuerden que al salir tenemos que cerrar el socket (ademas de loggear)!
-  */
+  if(resultado <= 0) {
+    /*
+      12.1. Recuerden que si hay error, hay que salir y tenemos que cerrar el socket (ademas de loggear)!
+    */
+  }
 }
 
 void * wait_content(int socket) {
