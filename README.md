@@ -6,7 +6,7 @@ El TP0 es una práctica inicial para empezar a familiarizarse con algunas de las
 Es un ejercicio corto pensado como una buena base para reutilizar código. 
 
 ## Requerimientos previos
-El ejercicio está pensado para compilarse y ejecutarse en [las Máquinas Virtuales provistas por la cátedra](https://www.utnso.com/recursos/maquinas-virtuales). Sin embargo, con poseer un entorno de Ubuntu con los paquetes `git gcc openssl libreadline6 libreadline-dev` se deberían obtener los mismos resultados.
+El ejercicio está pensado para compilarse y ejecutarse en [las Máquinas Virtuales provistas por la cátedra](https://www.utnso.com/recursos/maquinas-virtuales). Sin embargo, con poseer un entorno de Ubuntu con los paquetes `git gcc libssl-dev libreadline6 libreadline-dev` se deberían obtener los mismos resultados.
 
 Además, es condición necesaria tener instaladas [las "commons" o la biblioteca de TADs de uso común](https://github.com/sisoputnfrba/so-commons-library) desarrollada por la cátedra.
 
