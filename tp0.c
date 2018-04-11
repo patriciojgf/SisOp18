@@ -230,10 +230,10 @@ void send_md5(int socket, void * content) {
 }
 
 void wait_confirmation(int socket) {
-  int result = 1; // Dejemos creado un resultado por defecto
+  int result = 0; // Dejemos creado un resultado por defecto
   /*
-    19.   Ahora nos toca recibir la confirmacion del servidor.
-          Si el resultado obvenido es distinto de 0, entonces hubo un error
+    19.   Ahora nos toca recibir la confirmación del servidor.
+          Si el resultado obtenido es distinto de 1, entonces hubo un error
   */
 
   log_info(logger, "Los MD5 concidieron!");
