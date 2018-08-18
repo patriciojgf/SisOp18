@@ -14,4 +14,4 @@ Es recomendable tener mínimos conocimientos de C y socket para poder sacar más
 
 ## Desarrollo
 
-Para realizar este TP de una forma más óptima, es recomendable hacerlo junto con [su enunciado](https://docs.google.com/document/d/1azSR9T_LosaMeLk_WT5HgN71-2QVum-rtEgXOTQLZt8), complementando las anotaciones del código.
+Sea que lo hagas en tu casa o en el laboratorio durante el Workshop, tiene formato de desarrollo libre, usando como gu�a [el enunciado](https://docs.google.com/document/d/1azSR9T_LosaMeLk_WT5HgN71-2QVum-rtEgXOTQLZt8), complementando las anotaciones del códio y consultar a los ayudantes que esen presentes (o no) durante la realizacion del Workshop si tienen dudas.

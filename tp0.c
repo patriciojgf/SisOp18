@@ -33,6 +33,7 @@ int connect_to_server(char * ip, char * port) {
   getaddrinfo(ip, port, &hints, &server_info);  // Carga en server_info los datos de la conexion
 
   // 2. Creemos el socket con el nombre "server_socket" usando la "server_info" que creamos anteriormente
+  int server_socket = 0; //Eliminar esta linea luego de completar la anterior
   // int server_socket = socket(/* familia, socktype, protocolo */);
 
   // 3. Conectemosnos al server a traves del socket! Para eso vamos a usar connect()
@@ -153,6 +154,8 @@ void send_hello(int socket, Alumno alumno) {
           por lo que no tiene padding y la podemos mandar directamente sin necesidad
           de un buffer y usando el tamaño del tipo Alumno!
   */
+  
+  int resultado = 0; //Eliminar esta linea luego de completar la anteri
   // int resultado = (send(/* ?? */, &alumno, /* ??? */, 0);
 
   if(resultado <= 0) {
@@ -172,7 +175,7 @@ void * wait_content(int socket) {
 
   log_info(logger, "Esperando el encabezado del contenido(%ld bytes)", sizeof(ContentHeader));
   // 13.1. Reservamos el suficiente espacio para guardar un ContentHeader
-  // ContentHeader * header = { /* 8.1. */ };
+  ContentHeader * header = 0;//malloc(/* 8.1. */);
 
   // 13.2. Recibamos el header en la estructura y chequiemos si el id es el correcto.
   //      No se olviden de validar los errores, liberando memoria y cerrando el socket!
