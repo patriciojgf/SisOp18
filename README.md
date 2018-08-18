@@ -1,12 +1,12 @@
 # Sistemas Operativos - TP0
 
 ## ¿De qué trata?
-El TP0 es una prÃ¡ctica inicial para empezar a familiarizarse con algunas de las herramientas necesarias para el trabajo prÃ¡ctico cuatrimestral de la materia Sistemas Operativos, como son C, sockets y serialización.
+El TP0 es una práctica inicial para empezar a familiarizarse con algunas de las herramientas necesarias para el trabajo práctico cuatrimestral de la materia Sistemas Operativos, como son C, sockets y serialización.
 
 Es un ejercicio corto pensado como una buena base para reutilizar código. 
 
 ## Requerimientos previos
-El ejercicio estÃ¡ pensado para compilarse y ejecutarse en [las MÃ¡quinas Virtuales provistas por la cÃ¡tedra](https://www.utnso.com/recursos/maquinas-virtuales). Sin embargo, con poseer un entorno de Ubuntu con los paquetes `git gcc libssl-dev libreadline6 libreadline-dev` se deberán obtener los mismos resultados.
+El ejercicio está pensado para compilarse y ejecutarse en [las Máquinas Virtuales provistas por la cátedra](https://www.utnso.com/recursos/maquinas-virtuales). Sin embargo, con poseer un entorno de Ubuntu con los paquetes `git gcc libssl-dev libreadline6 libreadline-dev` se deberán obtener los mismos resultados.
 
 Además, es condición necesaria tener instaladas [las "commons" o la biblioteca de TADs de uso común](https://github.com/sisoputnfrba/so-commons-library) desarrollada por la cátedra.
 
