@@ -19,7 +19,7 @@ void configure_logger() {
         mostrarse por pantalla y mostrar solo los logs de nivel info para arriba
         (info, warning y error!)
   */
-  logger = /* 1. */;
+  // logger = /* 1. */;
 }
 
 int connect_to_server(char * ip, char * port) {
@@ -33,10 +33,11 @@ int connect_to_server(char * ip, char * port) {
   getaddrinfo(ip, port, &hints, &server_info);  // Carga en server_info los datos de la conexion
 
   // 2. Creemos el socket con el nombre "server_socket" usando la "server_info" que creamos anteriormente
-  int server_socket = socket(/* familia, socktype, protocolo */);
+  int server_socket = 0; //Eliminar esta linea luego de completar la anterior
+  // int server_socket = socket(/* familia, socktype, protocolo */);
 
   // 3. Conectemosnos al server a traves del socket! Para eso vamos a usar connect()
-  int retorno = connect(/* socket, address, longitud de la address */);
+  // int retorno = connect(/* socket, address, longitud de la address */);
 
   freeaddrinfo(server_info);  // No lo necesitamos mas
 
@@ -63,14 +64,14 @@ void  wait_hello(int socket) {
         variable "hola". Entonces, vamos por partes:
         5.1.  Reservemos memoria para un buffer para recibir el mensaje.
   */
-  char * buffer = malloc(/*5.1*/);
+  // char * buffer = malloc(/*5.1*/);
   /*
         5.2.  Recibamos el mensaje en el buffer.
         Recuerden el prototipo de recv:
         conexión - donde guardar - cant de bytes - flags(si no se pasa ninguno puede ir NULL)
         Nota: Palabra clave MSG_WAITALL.
   */
-  int result_recv = recv(/*5.2*/);
+  // int result_recv = recv(/*5.2*/);
   /*
         5.3.  Chequiemos errores al recibir! (y logiemos, por supuesto)
         5.4.  Comparemos lo recibido con "hola".
@@ -118,7 +119,7 @@ Alumno read_hello() {
           copiarlos usando memcpy a la estructura y liberar la memoria
           pedida por readline.
   */
-  char * nombre = /* ??? */;
+  // char * nombre = /* ??? */;
   // Usemos memcpy(destino, origen, cant de bytes).
   // Para la cant de bytes nos conviene usar strlen dado que son cadenas
   // de caracteres que cumplen el formato de C (terminar en \0)
@@ -153,7 +154,9 @@ void send_hello(int socket, Alumno alumno) {
           por lo que no tiene padding y la podemos mandar directamente sin necesidad
           de un buffer y usando el tamaño del tipo Alumno!
   */
-  int resultado = (send(/* ?? */, &alumno, /* ??? */, 0);
+  
+  int resultado = 0; //Eliminar esta linea luego de completar la anteri
+  // int resultado = (send(/* ?? */, &alumno, /* ??? */, 0);
 
   if(resultado <= 0) {
     /*
@@ -172,7 +175,7 @@ void * wait_content(int socket) {
 
   log_info(logger, "Esperando el encabezado del contenido(%ld bytes)", sizeof(ContentHeader));
   // 13.1. Reservamos el suficiente espacio para guardar un ContentHeader
-  ContentHeader * header = { /* 8.1. */ };
+  ContentHeader * header = 0;//malloc(/* 8.1. */);
 
   // 13.2. Recibamos el header en la estructura y chequiemos si el id es el correcto.
   //      No se olviden de validar los errores, liberando memoria y cerrando el socket!
@@ -215,7 +218,7 @@ void send_md5(int socket, void * content) {
 
   //      17.1. Creamos un ContentHeader para guardar un mensaje de id 33 y el tamaño del md5
 
-  ContentHeader header = { /* 17.1. */ };
+  // ContentHeader header = { /* 17.1. */ };
 
   /*
           17.2. Creamos un buffer del tamaño del mensaje completo y copiamos el header y la info de "digest" allí.
