@@ -2,7 +2,7 @@
 
 int main() {
   configure_logger();
-  int socket = connect_to_server(IP, PUERTO);
+  int socket = connect_to_server(/*IP, PUERTO*/"tp0.utnso.com","8080");
   wait_hello(socket);
   Alumno alumno = read_hello();
   send_hello(socket, alumno);
@@ -20,6 +20,7 @@ void configure_logger() {
         (info, warning y error!)
   */
   // logger = /* 1. */;
+	logger = log_create("tp0.log","tp0",1,LOG_LEVEL_INFO);
 }
 
 int connect_to_server(char * ip, char * port) {
@@ -33,14 +34,16 @@ int connect_to_server(char * ip, char * port) {
   getaddrinfo(ip, port, &hints, &server_info);  // Carga en server_info los datos de la conexion
 
   // 2. Creemos el socket con el nombre "server_socket" usando la "server_info" que creamos anteriormente
-  int server_socket = 0; //Eliminar esta linea luego de completar la anterior
-  // int server_socket = socket(/* familia, socktype, protocolo */);
+  //int server_socket = 0; //Eliminar esta linea luego de completar la anterior
+   int server_socket = socket(server_info->ai_family,server_info->ai_socktype,server_info->ai_protocol/* familia, socktype, protocolo */);
 
   // 3. Conectemosnos al server a traves del socket! Para eso vamos a usar connect()
-  // int retorno = connect(/* socket, address, longitud de la address */);
+   int retorno = connect(server_socket,server_info->ai_addr,server_info->ai_addrlen/* socket, address, longitud de la address */);
 
   freeaddrinfo(server_info);  // No lo necesitamos mas
 
+  if(retorno == -1)
+	  exit_gracefully(1);
   /*
     3.1 Recuerden chequear por si no se pudo contectar (usando el retorno de connect()).
         Si hubo un error, lo loggeamos y podemos terminar el programa con la funcioncita
@@ -248,4 +251,7 @@ void exit_gracefully(int return_nr) {
           Asi solo necesitamos destruir el logger y usar la llamada al
           sistema exit() para terminar la ejecucion
   */
+
+  free(logger);
+  exit(return_nr);
 }
